@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <boost/asio.hpp>
+#include "common/logger.hpp"
 
 using boost::asio::ip::tcp;
 using namespace std::string_literals;
@@ -28,15 +29,15 @@ int main(int argc, char* argv[]) {
                 boost::asio::buffers_begin(receive_buffer.data()),
                 boost::asio::buffers_end(receive_buffer.data())
             };
-            std::cout << "Server says: " << data;
+            ESCA_INFO("Server says: {}", data);
         }
         else {
-            std::cerr << "Read Error: " << ec.message() << std::endl;
+            ESCA_ERROR("Read Error: {}", ec.message());
         }
 
     }
     catch (std::exception& e) {
-        std::cerr << "Exception: " << e.what() << std::endl;
+        ESCA_ERROR("Exception: {}", e.what());
     }
     return 0;
 }

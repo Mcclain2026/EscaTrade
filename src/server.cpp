@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <boost/asio.hpp>
+#include "common/logger.hpp"
 
 using boost::asio::ip::tcp;
 using namespace std::string_literals;
@@ -17,20 +18,20 @@ int main(int argc, char* argv[]) {
         boost::asio::io_context io_context;
         tcp::acceptor acceptor(io_context, tcp::endpoint(tcp::v4(), port));
 
-        std::cout << "EscaTrade Server started on port: " << port << std::endl;
-        std::cout << "Waiting for connection..." << std::endl;
+        ESCA_INFO("EscaTrade Server starting on port: {}", port);
+        ESCA_DEBUG("Waiting for client connection...");
 
         tcp::socket socket(io_context);
         acceptor.accept(socket);
-
-        std::cout << "Client connected from: " << socket.remote_endpoint().address().to_string() << std::endl;
+        
+        ESCA_INFO("Client connected from: {}", socket.remote_endpoint().address().to_string());
 
         std::string message = "Connection Established\n";
         boost::asio::write(socket, boost::asio::buffer(message));
 
     }
     catch (std::exception& e) {
-        std::cerr << "Exception: " << e.what() << std::endl;
+        ESCA_ERROR("Exception: {}", e.what());
     }
 
     return 0;
